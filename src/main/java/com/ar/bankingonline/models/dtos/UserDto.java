@@ -2,13 +2,10 @@ package com.ar.bankingonline.models.dtos;
 
 import lombok.*;
 
-@Builder //Permite crear objetos de forma parcial
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
+@Data
 public class UserDto {
+
+    public UserDto(){}
 
     private Integer id;
 
