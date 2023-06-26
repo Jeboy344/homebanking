@@ -1,4 +1,4 @@
-package com.ar.bankingonline.models.dtos;
+package com.ar.bankingonline.api.dtos;
 
 import lombok.*;
 

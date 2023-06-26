@@ -1,14 +1,14 @@
-package com.ar.bankingonline.mappers;
+package com.ar.bankingonline.api.mappers;
 
-import com.ar.bankingonline.models.User;
-import com.ar.bankingonline.models.dtos.UserDto;
+import com.ar.bankingonline.domain.models.User;
+import com.ar.bankingonline.api.dtos.UserDto;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class UserMapper {
 
     // Los mappers me permiten enviar los datos desde una entidad
-    // hacia un dto o viceversa
+    // Hacia un Dto. o viceversa
 
     // ToDo: Aplicar patron Builder
 
@@ -16,17 +16,14 @@ public class UserMapper {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
-        user.setId(dto.getId());
-
-        return user;
+         return user;
     }
 
-    public UserDto dtoMapToDto(User user){
+    public UserDto userMapToDto(User user){
         UserDto dto = new UserDto();
-        user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword());
-        user.setId(dto.getId());
-
+        dto.setUsername(user.getUsername());
+        dto.setPassword(user.getPassword());
+        dto.setId(user.getId());
         return dto;
     }
 
