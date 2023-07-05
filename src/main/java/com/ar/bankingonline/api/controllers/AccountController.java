@@ -1,7 +1,6 @@
 package com.ar.bankingonline.api.controllers;
 
 import com.ar.bankingonline.api.dtos.AccountDto;
-import com.ar.bankingonline.api.dtos.UserDto;
 import com.ar.bankingonline.application.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +32,11 @@ public class AccountController {
     @PostMapping(value = "/accounts")
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto dto){
         return ResponseEntity.status(201).body(service.createAccount(dto)); // Redirija hacia el responsable de crear un usuario en la DB
+    }
+
+    @DeleteMapping(value = "/accounts/{id}")
+    public ResponseEntity<String> deleteAccount(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.status(200).body("Se ha eliminado la cuenta exitosamente");
     }
 }

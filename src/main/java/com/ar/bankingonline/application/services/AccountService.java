@@ -1,11 +1,8 @@
 package com.ar.bankingonline.application.services;
 
 import com.ar.bankingonline.api.dtos.AccountDto;
-import com.ar.bankingonline.api.dtos.UserDto;
 import com.ar.bankingonline.api.mappers.AccountMapper;
-import com.ar.bankingonline.api.mappers.UserMapper;
 import com.ar.bankingonline.domain.models.Account;
-import com.ar.bankingonline.domain.models.User;
 import com.ar.bankingonline.infrastructure.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +28,9 @@ public class AccountService {
 
     public AccountDto createAccount(AccountDto account){
         return AccountMapper.AccountToDto(repository.save(AccountMapper.dtoToAccount(account)));
+    }
+
+    public void delete(Long id){
+        repository.deleteById(id);
     }
 }
