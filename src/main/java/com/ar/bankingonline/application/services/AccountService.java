@@ -30,7 +30,25 @@ public class AccountService {
         return AccountMapper.AccountToDto(repository.save(AccountMapper.dtoToAccount(account)));
     }
 
-    public void delete(Long id){
-        repository.deleteById(id);
+    public AccountDto getAccountById(Long id) {
+        AccountDto account = AccountMapper.AccountToDto(repository.findById(id).get()); // O: .findById(id)).orElse(null);
+        return account;
     }
+
+    public AccountDto updateAccount(AccountDto account){
+       return AccountMapper.AccountToDto(repository.save(AccountMapper.dtoToAccount(account)));
+    }
+
+    public String deleteAccount(Long id){
+        Account account = repository.getById(id);
+        if (!account.equals(null)){
+            repository.deleteById(id);
+            return "Se ha eliminado el usuario";
+        }else {
+            return "No se ha eliminado el usuario";
+        }
+
+    }
+
+    // Agregar métodos de ingreso y egreso de dinero y realización de transferencias
 }

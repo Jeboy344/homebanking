@@ -29,14 +29,24 @@ public class AccountController {
         return ResponseEntity.status(200).body(accounts);
     }
 
+    @GetMapping(value="/accounts/{id}")
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id){
+        AccountDto account = service.getAccountById(id);
+        return ResponseEntity.status(200).body(account);
+    }
+
     @PostMapping(value = "/accounts")
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto dto){
         return ResponseEntity.status(201).body(service.createAccount(dto)); // Redirija hacia el responsable de crear un usuario en la DB
     }
 
+    @PutMapping(value = "/accounts")
+    public ResponseEntity<AccountDto> updateAccount(@RequestBody AccountDto account){
+        return ResponseEntity.status(200).body(service.updateAccount(account));
+    }
+
     @DeleteMapping(value = "/accounts/{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
-        service.delete(id);
-        return ResponseEntity.status(200).body("Se ha eliminado la cuenta exitosamente");
+        return ResponseEntity.status(200).body(service.deleteAccount(id));
     }
 }
