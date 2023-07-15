@@ -3,6 +3,8 @@ package com.ar.bankingonline.api.controllers;
 import com.ar.bankingonline.api.dtos.AccountDto;
 import com.ar.bankingonline.application.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,16 +39,16 @@ public class AccountController {
 
     @PostMapping(value = "/accounts")
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto dto){
-        return ResponseEntity.status(201).body(service.createAccount(dto)); // Redirija hacia el responsable de crear un usuario en la DB
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createAccount(dto));
     }
 
-    @PutMapping(value = "/accounts")
-    public ResponseEntity<AccountDto> updateAccount(@RequestBody AccountDto account){
-        return ResponseEntity.status(200).body(service.updateAccount(account));
+    @PutMapping(value = "/accounts/{id}")
+    public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto account){
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateAccount(id, account));
     }
 
     @DeleteMapping(value = "/accounts/{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
-        return ResponseEntity.status(200).body(service.deleteAccount(id));
+        return ResponseEntity.status(HttpStatus.OK).body(service.deleteAccount(id));
     }
 }

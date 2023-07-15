@@ -11,12 +11,14 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "account id")
+    @Column(name = "account_id")
     private Long id;
 
     private int number;
 
     private BigDecimal amount;
 
-    //private User owner;
+    @ManyToOne
+    @JoinColumn(name  = "user_id")
+    private User owner;
 }

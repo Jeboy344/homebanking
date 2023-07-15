@@ -7,7 +7,7 @@ public class UserDto {
 
     public UserDto(){}
 
-    private Integer id;
+    private Long id;
 
     private String username;
 

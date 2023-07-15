@@ -2,12 +2,14 @@ package com.ar.bankingonline.application.services;
 
 import com.ar.bankingonline.api.dtos.AccountDto;
 import com.ar.bankingonline.api.mappers.AccountMapper;
+import com.ar.bankingonline.domain.exceptions.AccountNotFoundException;
 import com.ar.bankingonline.domain.models.Account;
 import com.ar.bankingonline.infrastructure.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -35,17 +37,34 @@ public class AccountService {
         return account;
     }
 
-    public AccountDto updateAccount(AccountDto account){
-       return AccountMapper.AccountToDto(repository.save(AccountMapper.dtoToAccount(account)));
+    public AccountDto updateAccount(Long id, AccountDto account) {
+
+        Optional<Account> accountCreated = repository.findById(id);
+
+        if (accountCreated.isPresent()){
+            Account entity = accountCreated.get();
+
+            Account accountUpdated = AccountMapper.dtoToAccount(account);
+
+            accountUpdated.setId(entity.getId());
+
+            Account saved = repository.save(accountUpdated);
+
+            return AccountMapper.AccountToDto(saved);
+        } else {
+            throw new AccountNotFoundException("Client not found with id: " + id);
+        }
+
+        //return AccountMapper.AccountToDto(repository.save(AccountMapper.dtoToAccount(account)));
     }
 
     public String deleteAccount(Long id){
-        Account account = repository.getById(id);
-        if (!account.equals(null)){
+
+        if (repository.existsById(id)){
             repository.deleteById(id);
-            return "Se ha eliminado el usuario";
-        }else {
-            return "No se ha eliminado el usuario";
+            return "Se ha eliminado la cuenta";
+        } else {
+            return "No se ha eliminado la cuenta";
         }
 
     }
