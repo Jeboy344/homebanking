@@ -48,7 +48,7 @@ public class TransferService {
     }
 
     public TransferDto createTransfer(TransferDto transferDto){
-        // TODO: Buscar un Account por number
+        // ToDo: Buscar un Account por number
         Transfer transfer = TransferMapper.dtoToTransfer(transferDto);
         return TransferMapper.transferToDto(repository.save(transfer));
     }
@@ -69,7 +69,7 @@ public class TransferService {
         }
     }
 
-    // TODO: Llamar al método en el momento de la creación
+    // ToDo: Llamar al método en el momento de la creación
     @Transactional
     public TransferDto performTransfer(Long idOrigin, Long idDestination, BigDecimal amount) {
         // Comprobar si las cuentas de origen y destino existen
@@ -91,12 +91,12 @@ public class TransferService {
         accountRepository.save(originAccount);
         accountRepository.save(destinationAccount);
 
-        // TODO: Validar que en ambas cuentas se haya realizado la operación de manera correcta
-        // Es decir, si todo sale bien, se debeería guardar la transfer en la BD
+        // ToDo: Validar que en ambas cuentas se haya realizado la operación de manera correcta
+        //  Es decir si todo sale bien se debería guardar la transferencia en la BD
 
         // Crear la transferencia y guardarla en la base de datos
         Transfer transfer = new Transfer();
-        // Creamos un objeto del tipo Date para obtener la fecha actual
+        // Creamos un objeto del tipo Date para obtener la fecha acctual
         Date date = new Date();
         // Seteamos el objeto fecha actual en el transferDto
         transfer.setDate(date);

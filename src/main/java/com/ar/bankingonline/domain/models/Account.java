@@ -21,7 +21,7 @@ public class Account {
     // TODO: Investigar que sucede con las relaciones bidireccionales y por qué motivo puede ocurrir
     //  un error de recursividad
     @ManyToOne
-    //@JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id")
     private User owner;
 
 }
