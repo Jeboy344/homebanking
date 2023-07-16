@@ -62,11 +62,21 @@ public class AccountService {
             // Me traigo la entidad de base de datos. Esta es la que voy a modificar
             Account entity = accountCreated.get();
             // Valido que información traigo en el request para solo modificar lo de la petición y no toda la entidad
-            Account accountUpdated = AccountMapper.dtoToAccount(account);
+            if (account.getAmount()!=null){
+                entity.setBalance(account.getAmount());
+            }
+            if (account.getOwner()!=null){
+                // Si hay un owner en el body me traigo la entidad completa de BD por el id para vincularle el usuario a la cuenta
+                User user = userRepository.getReferenceById(account.getOwner().getId());
+                if (user!=null){
+                    entity.setOwner(user);
+                }
 
-            accountUpdated.setId(entity.getId());
+            }
+            // No hay que usar este mapper ya que te crea un account distinto al de BD y nop tiene los valores del account en cuestión, hay que modificar
+            //Account accountUpdated = AccountMapper.dtoToAccount(account);
 
-            Account saved = repository.save(accountUpdated);
+            Account saved = repository.save(entity);
 
             return AccountMapper.AccountToDto(saved);
         } else {
