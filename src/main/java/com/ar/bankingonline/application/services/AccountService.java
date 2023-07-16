@@ -4,7 +4,9 @@ import com.ar.bankingonline.api.dtos.AccountDto;
 import com.ar.bankingonline.api.mappers.AccountMapper;
 import com.ar.bankingonline.domain.exceptions.AccountNotFoundException;
 import com.ar.bankingonline.domain.models.Account;
+import com.ar.bankingonline.domain.models.User;
 import com.ar.bankingonline.infrastructure.repositories.AccountRepository;
+import com.ar.bankingonline.infrastructure.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +20,13 @@ public class AccountService {
     // Declaro una instancia del repositorio con @Autowired y sin la anotación
     @Autowired
     private AccountRepository repository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public AccountService(AccountRepository repository){
+
+    public AccountService(AccountRepository repository, UserRepository userRepository){
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -33,7 +39,12 @@ public class AccountService {
 
     @Transactional
     public AccountDto createAccount(AccountDto account){
-        return AccountMapper.AccountToDto(repository.save(AccountMapper.dtoToAccount(account)));
+        Optional<User> user = userRepository.findById(account.getOwner().getId());
+        Account accountModel = AccountMapper.dtoToAccount(account);
+        accountModel.setOwner(user.get());
+        accountModel= repository.save(accountModel);
+        AccountDto dto = AccountMapper.AccountToDto(accountModel);
+        return dto;
     }
 
     @Transactional
@@ -48,8 +59,9 @@ public class AccountService {
         Optional<Account> accountCreated = repository.findById(id);
 
         if (accountCreated.isPresent()){
+            // Me traigo la entidad de base de datos. Esta es la que voy a modificar
             Account entity = accountCreated.get();
-
+            // Valido que información traigo en el request para solo modificar lo de la petición y no toda la entidad
             Account accountUpdated = AccountMapper.dtoToAccount(account);
 
             accountUpdated.setId(entity.getId());
@@ -58,7 +70,7 @@ public class AccountService {
 
             return AccountMapper.AccountToDto(saved);
         } else {
-            throw new AccountNotFoundException("Client not found with id: " + id);
+            throw new AccountNotFoundException("Account not found with id: " + id);
         }
 
     }
@@ -78,16 +90,24 @@ public class AccountService {
     // Agregar métodos de ingreso y egreso de dinero y realización de transferencias
     public BigDecimal withdraw(BigDecimal amount, Long idOrigin){
         // primero: Obtenemos la cuenta
+        Account account = repository.findById(idOrigin).orElse(null);
         // segundo: debitamos el valor del amount con el amount de esa cuenta (validar si hay dinero disponible)
+        if (account.getBalance().subtract(amount).intValue() > 0){
+            account.setBalance(account.getBalance().subtract(amount));
+            repository.save(account);
+        }
         // tercero: devolvemos esa cantidad
-        return null;
+        return account.getBalance().subtract(amount);
     }
 
     public BigDecimal addAmountToAccount(BigDecimal amount, Long idOrigin){
         // primero: Obtenemos la cuenta
+        Account account = repository.findById(idOrigin).orElse(null);
         // segundo: acreditamos el valor del amount con el amount de esa cuenta
+        account.setBalance(account.getBalance().add(amount));
+        repository.save(account);
         // tercero: devolvemos esa cantidad
-        return null;
+        return amount;
     }
 
 
